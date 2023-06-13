@@ -16,7 +16,7 @@ async function bootstrap() {
 
   app.enableCors({
     credentials: true,
-    origin: '*',
+    origin: 'https://write-el-jzg9qtesd-hayat711.vercel.app/',
     optionsSuccessStatus: 200,
     methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
