@@ -26,7 +26,7 @@ interface UserSocket extends Socket {
 
 @WebSocketGateway({
   cors: {
-    origin: 'http://localhost:3000',
+    origin: 'wss://writeel.vercel.app',
     credentials: true
   },
   namespace: 'chat'

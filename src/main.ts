@@ -14,9 +14,11 @@ async function bootstrap() {
   const configService = app.get<ConfigService>(ConfigService);
   const reflector = app.get(Reflector)
 
+  app.use(helmet());
+
   app.enableCors({
     credentials: true,
-    origin: 'https://write-el-jzg9qtesd-hayat711.vercel.app',
+    origin: 'https://writeel.vercel.app',
     optionsSuccessStatus: 200,
     methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -25,7 +27,6 @@ async function bootstrap() {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true}))
   app.use(cookieParser());
-  app.use(helmet());
 
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
