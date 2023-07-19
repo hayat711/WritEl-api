@@ -20,4 +20,10 @@ export class CreatePostDto {
 
     @IsNumber()
     views: number;
+
+    @IsString({
+        each: true
+    })
+    likedUsers: string[];
+
 }

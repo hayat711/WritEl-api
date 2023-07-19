@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Param, Patch, Post, UseGuards} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from "@nestjs/common";
 import {PostService} from './post.service';
 import {CreatePostDto} from './dto/create-post.dto';
 import {UpdatePostDto} from './dto/update-post.dto';
@@ -23,15 +23,23 @@ export class PostController {
     return this.postService.getPosts();
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.postService.getPost(id);
+  findOne(@Param('id') id: string,
+          @Req() req: Request,
+          @CurrentUser('id') userId: string
+          ) {
+
+
+    return this.postService.getPost(id, userId);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
+    console.log('this patch route called');
+    console.log('the post id -->', id);
+    console.log('the post update field -->', updatePostDto);
     if (updatePostDto.views) {
       await this.postService.incrementView(id);
     }

@@ -10,7 +10,7 @@ export class DatabaseFileService {
 
 
     async uploadDatabaseFile(dataBuffer: Buffer, filename : string, queryRunner: QueryRunner) {
-        const newFile = await queryRunner.manager.create(DatabaseFile, {
+        const newFile = queryRunner.manager.create(DatabaseFile, {
             filename,
             data: dataBuffer
         });

@@ -18,7 +18,7 @@ export class RoomService {
   constructor(@InjectRepository(Room) private readonly roomRepository: Repository<Room>,
               @InjectRepository(Invitation) private readonly invitationRepository: Repository<Invitation>,
               private readonly userService: UserService,
-              @InjectEmitter() private readonly emitter: Emitter
+              // @InjectEmitter() private readonly emitter: Emitter
               ) {
   }
 

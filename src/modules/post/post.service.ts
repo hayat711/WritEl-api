@@ -30,15 +30,23 @@ export class PostService {
   }
 
   public async getPosts() {
-    return await this.postRepository.find();
-  }
-
-  public async getPost(postId: string) {
-    return await this.postRepository.findOne({
-      where: {
-        id: postId
+    return await this.postRepository.find({
+      order: {
+        createdAt: 'DESC'
       }
     });
+  }
+
+  public async getPost(postId: string, userId:string) {
+    const post =  await this.postRepository.findOne({
+      where: {
+        id: postId,
+        author: { id: userId}
+      }
+    });
+    console.log('this post ', postId);
+    console.log('is here', post);
+    return post;
   }
 
   public async updatePost(postId: string, updatePostDto: UpdatePostDto) {

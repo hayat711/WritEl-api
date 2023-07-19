@@ -137,6 +137,7 @@ export class UserService {
     }
   }
 
+r
   findAll() {
     return this.userRepository.find();
   }

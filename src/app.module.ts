@@ -40,32 +40,32 @@ import {APP_GUARD} from "@nestjs/core";
         ttl: 60,
         limit:10,
       }),
-    RedisModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (configService: ConfigService): Promise<RedisModuleOptions> => {
-        return {
-          config: {
-            host: configService.get('REDIS_HOST'),
-            port: configService.get('REDIS_PORT'),
-            password: configService.get('REDIS_PASSWORD'),
-          }
-        }
-      }
-    }),
-    WsEmitterModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (configService: ConfigService) : Promise<WsEmitterClientOptions> => {
-        return {
-          config: {
-            host: configService.get('REDIS_HOST'),
-            port: configService.get('REDIS_PORT'),
-            password: configService.get<string>('REDIS_PASSWORD')
-          }
-        }
-      }
-    }),
+    // RedisModule.forRootAsync({
+    //   imports: [ConfigModule],
+    //   inject: [ConfigService],
+    //   useFactory: async (configService: ConfigService): Promise<RedisModuleOptions> => {
+    //     return {
+    //       config: {
+    //         host: configService.get('REDIS_HOST'),
+    //         port: configService.get('REDIS_PORT'),
+    //         password: configService.get('REDIS_PASSWORD'),
+    //       }
+    //     }
+    //   }
+    // }),
+    // WsEmitterModule.registerAsync({
+    //   imports: [ConfigModule],
+    //   inject: [ConfigService],
+    //   useFactory: async (configService: ConfigService) : Promise<WsEmitterClientOptions> => {
+    //     return {
+    //       config: {
+    //         host: configService.get('REDIS_HOST'),
+    //         port: configService.get('REDIS_PORT'),
+    //         password: configService.get<string>('REDIS_PASSWORD')
+    //       }
+    //     }
+    //   }
+    // }),
 
   ],
   controllers: [],

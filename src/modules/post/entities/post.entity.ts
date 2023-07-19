@@ -36,7 +36,23 @@ export class Post extends AbstractEntity<Post>{
     @Column({ default: 0})
     views: number;
 
+    @Column('text',{
+        array: true,
+        nullable: true
+    })
+    likedUsers: string[];
 
+    @Column('text',{
+        array: true,
+        nullable: true
+    })
+    dislikedUsers: string[];
+
+    @Column({
+        type: 'jsonb',
+        nullable: true
+    })
+    draft: string;
 
 
     @ManyToOne(() => User, user => user.posts, {

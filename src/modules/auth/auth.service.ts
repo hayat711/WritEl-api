@@ -23,7 +23,7 @@ import RequestWithUser, {AuthRequest} from "./dto/req-with-user.dto";
 import * as process from "process";
 import {AccountStatus} from "../../common/enums/status.enum";
 import {PasswordValuesDto} from "./dto/password-values.dto";
-import {RedisService} from "@liaoliaots/nestjs-redis";
+// import {RedisService} from "@liaoliaots/nestjs-redis";
 
 
 @Injectable()
@@ -31,7 +31,7 @@ export class AuthService {
     constructor(private readonly userService: UserService,
                 private readonly jwtService: JwtService,
                 private readonly configService: ConfigService,
-                private readonly redisService: RedisService) {
+               ) {
     }
 
 
@@ -69,7 +69,6 @@ export class AuthService {
     public async login(credentials: LoginDto, req: Request) {
         try{
             const { email, password } = credentials;
-            console.log('login credentials', credentials);
             const user = await  this.getAuthenticatedUser(email, password);
             const [accessToken, refreshToken] = await this.generateToken(user);
 
@@ -90,7 +89,7 @@ export class AuthService {
             const verifiedRefresh = await this.jwtService.verifyAsync(refreshTokenCookie, {
                 secret: this.configService.get('JWT_REFRESH_SECRET_KEY')
             })
-            await this.redisService.getClient().del(`refresh-token:${verifiedRefresh.id}:${verifiedRefresh.jti}`)
+            // await this.redisService.getClient().del(`refresh-token:${verifiedRefresh.id}:${verifiedRefresh.jti}`)
         }
 
         req.res.clearCookie('access_token');
@@ -164,9 +163,9 @@ export class AuthService {
     }
 
     public async confirmAccount(user: User, token: string) {
-        const accountId = await this.redisService.getClient(`confirm-account', ${token}`);
+        // const accountId = await this.redisService.getClient(`confirm-account', ${token}`);
 
-        if(!accountId) {
+        if(!user) {
             //@ts-ignore
             if(accountId === user.id && user.accountStatus === AccountStatus.VERIFIED) {
                 return {
@@ -187,7 +186,7 @@ export class AuthService {
                 accountStatus: AccountStatus.VERIFIED
             })
 
-            await this.redisService.getClient().del(`confirm-account: ${token}`)
+            // await this.redisService.getClient().del(`confirm-account: ${token}`)
         }
         return {
             success: true,
@@ -269,11 +268,11 @@ export class AuthService {
     }
 
     public async setNewPassword(newPassword: string, token: string, reqUser: User) {
-        const accountId = await this.redisService.getClient().get(`reset-password:${token}`)
+        // const accountId = await this.redisService.getClient().get(`reset-password:${token}`)
 
         const user = await this.userService.getUserByField('id', reqUser.id);
 
-        if (!accountId) {
+        if (!user) {
             throw new BadRequestException(`Reset password token expired`)
         }
 
@@ -281,7 +280,7 @@ export class AuthService {
             password: await argon.hash(newPassword)
         });
 
-        await this.redisService.getClient().del(`reset-password:${token}`)
+        // await this.redisService.getClient().del(`reset-password:${token}`)
 
         return {
             success: true,
@@ -318,7 +317,7 @@ export class AuthService {
             expiresIn: this.configService.get('JWT_REFRESH_EXPIRATION_TIME'),
         })
         //TODO add redis service
-        await this.redisService.getClient().set(`refresh-token:${user.id}:${jwtid}`, user.id, 'EX', 60 * 60 * 24 * 30);
+        // await this.redisService.getClient().set(`refresh-token:${user.id}:${jwtid}`, user.id, 'EX', 60 * 60 * 24 * 30);
 
         return [accessToken, refreshToken];
     }
@@ -343,14 +342,14 @@ export class AuthService {
     private async sendResetToken(user: User) {
         const token = nanoid();
 
-        await this.redisService.getClient().set(`reset-password:${token}`, user.id, 'EX', 60 * 60 ) // 1 hour until expires
+        // await this.redisService.getClient().set(`reset-password:${token}`, user.id, 'EX', 60 * 60 ) // 1 hour until expires
 
     }
 
     private async sendConfirmationToken(user: User) {
         const token = nanoid()
 
-        await this.redisService.getClient().set(`confirm-account:${token}`, user.id, 'EX', 60 * 60  ) // 1 hour until expires
+        // await this.redisService.getClient().set(`confirm-account:${token}`, user.id, 'EX', 60 * 60  ) // 1 hour until expires
     }
 
 }

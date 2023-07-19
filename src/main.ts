@@ -3,7 +3,7 @@ import {AppModule} from './app.module';
 import {ClassSerializerInterceptor, ValidationPipe} from "@nestjs/common";
 import cookieParser from 'cookie-parser';
 import * as express from 'express';
-import {ConfigService} from "@nestjs/config";
+import { ConfigService } from '@nestjs/config';
 import {RedisIoAdapter} from "./modules/chat/chat.adapter";
 import helmet from 'helmet';
 
@@ -12,13 +12,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const configService = app.get<ConfigService>(ConfigService);
-  const reflector = app.get(Reflector)
+  const reflector = app.get(Reflector);
 
   app.use(helmet());
 
   app.enableCors({
     credentials: true,
-    origin: 'https://writeel.vercel.app',
+    origin: 'http://localhost:3000',
     optionsSuccessStatus: 200,
     methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -31,10 +31,10 @@ async function bootstrap() {
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
 
-  const redisIoAdapter = new RedisIoAdapter(app);
-  await redisIoAdapter.connectToRedis();
+  // const redisIoAdapter = new RedisIoAdapter(app);
+  // await redisIoAdapter.connectToRedis();
 
-  app.useWebSocketAdapter(redisIoAdapter);
+  // app.useWebSocketAdapter(redisIoAdapter);
 
   app.setGlobalPrefix('/api');
   app.useGlobalPipes( new ValidationPipe());
