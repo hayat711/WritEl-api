@@ -32,7 +32,12 @@ export class ForumService {
 
   public async getForums() {
     try {
-      return await this.forumRepository.find();
+      const forums =  await this.forumRepository.find({
+        order: { createdAt: 'DESC' },
+        relations: ['posts', 'owner'],
+      });
+      console.log('forums', forums);
+      return forums;
     } catch (e) {
       console.log(e);
     }
