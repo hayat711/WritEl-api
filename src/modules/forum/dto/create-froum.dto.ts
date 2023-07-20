@@ -1,4 +1,4 @@
-import {IsNotEmpty, IsString} from "class-validator";
+import {IsNotEmpty, IsOptional, IsString} from "class-validator";
 import {ForumCategory} from "../../../common/enums/forum.category.enum";
 
 export class CreateForumDto {
@@ -11,7 +11,7 @@ export class CreateForumDto {
     @IsString()
     description: string;
 
+    @IsOptional()
     category: ForumCategory;
-
 
 }

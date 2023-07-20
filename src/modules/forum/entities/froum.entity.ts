@@ -8,10 +8,13 @@ import {ForumCategory} from "../../../common/enums/forum.category.enum";
 export class Forum extends AbstractEntity<Forum>{
 
     @ManyToOne(() => User, user => user.forums)
-    author: User
+    owner: User
+
+    @Column('text',{ name: 'subscribers',nullable: true, array: true})
+    subscribers: string[];
 
     @OneToMany(() => Post, post => post.forum, {
-        eager: true, nullable: true, cascade: true,
+        eager: true, nullable: true, cascade: true, onDelete: 'CASCADE'
     })
     posts: Post[];
 

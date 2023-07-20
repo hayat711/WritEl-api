@@ -128,7 +128,7 @@ export class User extends AbstractEntity<User>{
     })
     histories: History[];
 
-    @OneToMany(() => Forum, forum => forum.author, {
+    @OneToMany(() => Forum, forum => forum.owner, {
         onDelete: 'CASCADE', cascade: true
     })
     forums: Forum[];

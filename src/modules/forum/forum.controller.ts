@@ -1,10 +1,20 @@
-import {Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards} from '@nestjs/common';
-import {ForumService} from "./forum.service";
-import {CreateForumDto} from "./dto/create-froum.dto";
-import {CurrentUser} from "../../common/decorators";
-import {JwtAuthGuard} from "../../common/guards/jwt.auth.guard";
-import {UpdateForumDto} from "./dto/update-froum.dto";
-import {Request} from "express";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { ForumService } from './forum.service';
+import { CreateForumDto } from './dto/create-froum.dto';
+import { CurrentUser } from '../../common/decorators';
+import { JwtAuthGuard } from '../../common/guards/jwt.auth.guard';
+import { UpdateForumDto } from './dto/update-froum.dto';
+import { Request } from 'express';
 
 @Controller('forum')
 export class ForumController {
@@ -12,22 +22,18 @@ export class ForumController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  createForum(@Body() createForumDto: CreateForumDto,
-              @CurrentUser('id') userId: string,
-              @Req() req: Request ) {
-    console.log('curr user', userId);
-    console.log('forum vaules', createForumDto);
-    console.log('user ', req.user);
-    console.log('the req cookies ', req.cookies);
+  createForum(
+    @Body() createForumDto: CreateForumDto,
+    @CurrentUser('id') userId: string,
+    @Req() req: Request,
+  ) {
     return this.forumService.createForum(userId, createForumDto);
   }
-
 
   @Get()
   findAll() {
     return this.forumService.getForums();
   }
-
 
   @Get(':id')
   findOne(@Param('id') id: string) {
@@ -44,5 +50,17 @@ export class ForumController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.forumService.removeForum(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post(':id/subscribe')
+  subscribe(@Param('id') id: string, @CurrentUser('id') userId: string) {
+    return this.forumService.subscribeToForum(id, userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post(':id/unsubscribe')
+  unsubscribe(@Param('id') id: string, @CurrentUser('id') userId: string) {
+    return this.forumService.unsubscribeToForum(id, userId);
   }
 }
