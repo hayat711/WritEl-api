@@ -37,12 +37,14 @@ export class Post extends AbstractEntity<Post>{
     views: number;
 
     @Column('text',{
+        name: 'liked_users',
         array: true,
         nullable: true
     })
     likedUsers: string[];
 
     @Column('text',{
+        name: 'disliked_users',
         array: true,
         nullable: true
     })
