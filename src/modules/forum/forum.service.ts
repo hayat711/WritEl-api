@@ -23,7 +23,6 @@ export class ForumService {
       });
 
       const savedForum = await this.forumRepository.save(forum);
-      console.log('new forum created ', savedForum);
       return savedForum;
     } catch (e) {
       console.log('error creating forum ', e);
@@ -36,7 +35,6 @@ export class ForumService {
         order: { createdAt: 'DESC' },
         relations: ['posts', 'owner'],
       });
-      console.log('forums', forums);
       return forums;
     } catch (e) {
       console.log(e);
@@ -111,7 +109,6 @@ export class ForumService {
         (subscriber) => subscriber !== userId,
       );
       const updatedForum = await this.forumRepository.save(forum);
-      console.log('new forum updated', updatedForum);
 
       return updatedForum;
     } catch (e) {
