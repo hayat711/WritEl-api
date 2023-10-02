@@ -23,6 +23,9 @@ import RequestWithUser, {AuthRequest} from "./dto/req-with-user.dto";
 import * as process from "process";
 import {AccountStatus} from "../../common/enums/status.enum";
 import {PasswordValuesDto} from "./dto/password-values.dto";
+import { RedisService } from '@liaoliaots/nestjs-redis';
+import { InjectQueue } from '@nestjs/bull';
+import { Queue } from 'bull';
 // import {RedisService} from "@liaoliaots/nestjs-redis";
 
 
@@ -31,6 +34,8 @@ export class AuthService {
     constructor(private readonly userService: UserService,
                 private readonly jwtService: JwtService,
                 private readonly configService: ConfigService,
+                private readonly redisService: RedisService,
+                @InjectQueue('mail-queue') private mailQueue : Queue
                ) {
     }
 
@@ -343,13 +348,14 @@ export class AuthService {
         const token = nanoid();
 
         // await this.redisService.getClient().set(`reset-password:${token}`, user.id, 'EX', 60 * 60 ) // 1 hour until expires
-
+        await this.mailQueue.add('reset', { user, token})
     }
 
     private async sendConfirmationToken(user: User) {
         const token = nanoid()
 
         // await this.redisService.getClient().set(`confirm-account:${token}`, user.id, 'EX', 60 * 60  ) // 1 hour until expires
+        await this.mailQueue.add('confirm', { user, token})
     }
 
 }
